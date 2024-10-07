@@ -1,13 +1,39 @@
 const Pool = require('pg').Pool
 const psqlListRouter = require('express').Router()
+require('dotenv').config()
+
+console.log(process.env.PSQL_USER)
+console.log(process.env.PSQL_HOST)
+console.log(process.env.PSQL_NAME)
+console.log(process.env.PSQL_PASSWORD)
+console.log(process.env.PSQL_PORT)
 
 const pool = new Pool({
-  user: 'me',
-  host: 'localhost',
-  database: 'postgres_lists_items',
-  password: 'password',
-  port: 5432
+  user: process.env.PSQL_USER,
+  host: process.env.PSQL_HOST,
+  database: process.env.PSQL_NAME,
+  password: process.env.PSQL_PASSWORD,
+  port: process.env.PSQL_PORT,
+  ssl: {
+    rejectUnauthorized: false,     // Accept self-signed certificates
+  },
 })
+
+pool.connect((err, client, release) => {
+  if (err) {
+    return console.error('Error acquiring client', err.stack);
+  }
+  client.query('SELECT NOW()', (err, result) => {
+    release(); // Release the client back to the pool
+    if (err) {
+      return console.error('Error executing query', err.stack);
+    }
+    console.log('Connection successful:', result.rows);
+    // Exit the process after successful connection
+    process.exit(0);
+  });
+});
+
 
 psqlListRouter.get('/', (req, res) => {
   pool.query('SELECT * FROM items')
