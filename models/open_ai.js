@@ -5,7 +5,6 @@ const MaxTokens = 3000
 const CharsPerToken = 4
 const CharsPerMaxTokenCount = CharsPerToken * MaxTokens
 
-
 const configuration = {
   apiKey: process.env.OPENAI_API_KEY,
 };
@@ -66,56 +65,3 @@ const process_summaries = async function(summaries) {
 
 
 module.exports = { split_into_chunks, process_chunks, process_summaries }
-
-// const split_into_chunks = function(data, max_tokens=3000) {
-//   chunks = []
-//   current_chunk = ""
-//   tokenCount = 0
-//   data.forEach(eventArr => {
-//     if (Array.isArray(eventArr)) {
-//       eventArr.forEach(event => {
-//         const prompt = JSON.stringify(event)
-//         const tokens = Math.floor(prompt.length / 4)
-//         if (tokenCount += tokens > max_tokens) {
-//           chunks.push(current_chunk);
-//           current_chunk = prompt
-//           tokenCount = 0
-//         } else {
-//           current_chunk += prompt + "\n"
-//           tokenCount += tokens
-//         }
-//       })
-//     } else {
-//       const prompt = JSON.stringify(eventArr)
-//       const tokens = Math.floor(prompt.length / 4)
-//       if (tokenCount += tokens > max_tokens) {
-//         chunks.push(current_chunk);
-//         current_chunk = prompt
-//       } else {
-//         current_chunk += prompt + "\n"
-//       }
-//     }
-//   })
-//   chunks.push(current_chunk)
-//   return chunks
-// }
-
-// const process_chunks = async function(chunks) {
-//   const summaries = []
-//   console.log('processing chunks')
-//   console.log('chunks length', chunks.length)
-//   for (i=0; i < chunks.length; i++) {
-//     console.log(`processing chunk ${i}`)
-//     const completion = await openai.chat.completions.create({
-//       model: "gpt-4o-mini",
-//       messages: [
-//         { role: "system", content: "You are a helpful assistant." },
-//         {
-//             role: "user",
-//             content: `Summarize the following rrweb events:\n ${chunks[i]} in one short paragraph.`,
-//         }]
-//     })
-//     summaries.push(completion.choices[0].message.content)
-//   }
-//   return summaries
-// }

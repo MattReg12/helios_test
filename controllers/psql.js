@@ -8,6 +8,9 @@ const pool = new Pool({
   database: process.env.PSQL_NAME,
   password: process.env.PSQL_PASSWORD,
   port: process.env.PSQL_PORT,
+  ssl: {
+    rejectUnauthorized: false, // Use this if your RDS instance requires SSL and you're testing locally
+  },
 })
 
 // await pool.connect((err, client, release) => {
@@ -25,7 +28,7 @@ const pool = new Pool({
 // });
 
 psqlListRouter.get('/', (req, res) => {
-  pool.query('SELECT * FROM recordings')
+  pool.query('SELECT * FROM sessions')
     .then(result => {
       res.json(result.rows)
     })
