@@ -1,17 +1,41 @@
 const Redis = require('ioredis');
 const redisRouter = require('express').Router()
-const { split_into_chunks, process_chunks, process_summaries }= require('./open_ai')
+require('dotenv').config()
+const { split_into_chunks, process_chunks, process_summaries }= require('./open_ai');
 
 let redis;
 
 try {
-  redis = new Redis('redis://default:4MA0zipt3kCwkdrrvnsz0kPXi62I4HjB@redis-11913.c82.us-east-1-2.ec2.redns.redis-cloud.com:11913');
-  console.log('Connected to redis DB!!!')
+  redis = new Redis(process.env.REDIS_URL);
+  console.log('Connected to redis DB')
 } catch {
-  console.log("error connecting to redis")
+  console.log("Error connecting to redis")
+}
+
+const sessionExists = async function(id) {
+  try {
+    const data = await redis.call('JSON.GET', id);
+    return !!data 
+  } catch (e) {
+    console.error('Redis session fetch error:', e)
+  }
+}
+
+const getRecordingData = async function(id) {
+  try {
+    const data = await redis.call('JSON.GET', id);
+    return data
+  } catch (e) {
+    console.error('Redis recording data fetch error:', e)
+  }
 }
 
 
+
+// These routes are only for testing in the initial phases
+//
+//
+//
 redisRouter.post('/', async (req, res) => {
   const session = req.body.sessionId
   const data = req.body.data
@@ -25,11 +49,14 @@ redisRouter.post('/', async (req, res) => {
 
 redisRouter.get('/:id', async (req, res) => {
   const id = req.params.id
-  const db = await redis.call('JSON.GET', id);
-  const chunks = split_into_chunks(db)
-  const summaries = await process_chunks(chunks)
-  const mainSummary = await process_summaries(summaries)
-  res.send(mainSummary)
+  const exists = await sessionExists(id)
+  if (exists) {
+    const db = await getRecordingData(id);
+    const chunks = split_into_chunks(db)
+    const summaries = await process_chunks(chunks)
+    const mainSummary = await process_summaries(summaries)
+    res.send(mainSummary)
+  }
 })
 
 module.exports = redisRouter
