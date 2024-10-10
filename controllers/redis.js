@@ -1,7 +1,7 @@
 import Redis from 'ioredis';
 import express from 'express'
 const redisRouter = express.Router()
-import { split_into_chunks, process_chunks, process_summaries } from './open_ai.js' //rewrite this line
+import { split_into_chunks, process_chunks, process_summaries } from '../models/open_ai.js' //rewrite this line
 
 let redis;
 

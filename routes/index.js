@@ -1,6 +1,6 @@
 import express from 'express'
 const indexRouter = express.Router()
-import redis from '../models/redis.js'
+import redis from '../controllers/redis.js'
 
 
 indexRouter.get('/:id', async (req, res) => {

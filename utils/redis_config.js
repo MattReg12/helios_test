@@ -1,6 +1,6 @@
 import Redis from 'ioredis'
 
-class RedisConfig {
+class RedisPubSub {
   constructor() {
     this.redis = new Redis(process.env.REDIS_URL)
   }
@@ -19,4 +19,4 @@ class RedisConfig {
   }
 }
 
-module.exports = RedisConfig
+export default RedisPubSub

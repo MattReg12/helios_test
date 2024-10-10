@@ -45,7 +45,6 @@ export const process_chunks = async function(chunks) {
   return summaries.map(summary => summary.value);
 }
 
-
 export const process_summaries = async function(summaries) {
   console.log('processing summary')
   const completion = await openai.chat.completions.create({
