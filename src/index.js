@@ -1,5 +1,5 @@
 import app from '../app.js'
-import RedisPubSub from '../utils/redis_config.js'
+import RedisPubSub from '../utils/redis_pubsub.js'
 
 const redis = new RedisPubSub()
 
