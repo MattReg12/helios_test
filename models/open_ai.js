@@ -1,6 +1,4 @@
-
-require('dotenv').config();
-const OpenAI = require('openai');
+import OpenAI from 'openai';
 const MaxTokens = 3000
 const CharsPerToken = 4
 const CharsPerMaxTokenCount = CharsPerToken * MaxTokens
@@ -11,7 +9,7 @@ const configuration = {
 
 const openai = new OpenAI(configuration)
 
-const split_into_chunks = function(data, MaxTokens) {
+export const split_into_chunks = function(data, MaxTokens) {
   chunks = []
   startIndex = 0
   while (startIndex < data.length) {
@@ -40,7 +38,7 @@ const chunk_to_promise = async function(chunk) {
   }
 }
 
-const process_chunks = async function(chunks) {
+export const process_chunks = async function(chunks) {
   const promises = chunks.map(chunk_to_promise)
   const summaries = await Promise.allSettled(promises)
   
@@ -48,7 +46,7 @@ const process_chunks = async function(chunks) {
 }
 
 
-const process_summaries = async function(summaries) {
+export const process_summaries = async function(summaries) {
   console.log('processing summary')
   const completion = await openai.chat.completions.create({
       model: "gpt-4o-mini",
@@ -62,6 +60,3 @@ const process_summaries = async function(summaries) {
 
   return completion.choices[0].message.content
 }
-
-
-module.exports = { split_into_chunks, process_chunks, process_summaries }

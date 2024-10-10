@@ -1,5 +1,6 @@
-const indexRouter = require('express').Router()
-const redis = require('../models/redis')
+import express from 'express'
+const indexRouter = express.Router()
+import redis from '../models/redis.js'
 
 
 indexRouter.get('/:id', async (req, res) => {
@@ -15,4 +16,4 @@ indexRouter.post('/:id', async (req, res) => {
 
 })
 
-module.exports = indexRouter
+export default indexRouter

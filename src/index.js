@@ -1,7 +1,5 @@
-const app = require('../app')
-const port = 3000;
-const Redis = require('ioredis')
-require('dotenv').config()
+import app from '../app.js'
+import Redis from 'ioredis'
 
 // Needs to move to another file
 // class RedisConfig {
@@ -28,10 +26,8 @@ require('dotenv').config()
 //   console.log(`Message received on expired key channel: ${message}`)
 // })
 
-
-
-app.listen(port, () => {
-  console.log(`Listening on port ${port}`)
+app.listen(process.env.PORT, () => {
+  console.log(`Listening on port ${process.env.PORT}`)
 })
 
 app.get('/', (req, res) => {

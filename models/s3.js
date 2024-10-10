@@ -1,5 +1,4 @@
-require('dotenv').config()
-const AWS = require('aws-sdk');
+import AWS from 'aws-sdk'
 
 const s3 = new AWS.S3({
   accessKeyId: process.env.S3_ACCESS_KEY,
@@ -9,7 +8,7 @@ const s3 = new AWS.S3({
 
 const bucketName = process.env.S3_BUCKET_NAME;
 
-async function uploadFile(fileContent, key) {
+export async function uploadFile(fileContent, key) {
   const params = {
     Bucket: bucketName,
     Key: key, // File name you want to save as in S3
@@ -26,7 +25,7 @@ async function uploadFile(fileContent, key) {
   }
 }
 
-async function downloadFile(key) {
+export async function downloadFile(key) {
   const params = {
     Bucket: bucketName,
     Key: key,
@@ -40,5 +39,3 @@ async function downloadFile(key) {
     console.error('Error downloading file from S3:', error);
   }
 }
-
-module.exports = { uploadFile, downloadFile };

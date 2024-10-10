@@ -1,6 +1,9 @@
-const Pool = require('pg').Pool
-const psqlListRouter = require('express').Router()
-require('dotenv').config()
+import pg from 'pg'
+const Pool = pg.Pool
+import express from 'express'
+const psqlListRouter = express.Router()
+import dotenv from 'dotenv'  // i dont really know why we need this here
+dotenv.config() // i dont really know why we need this here
 
 const pool = new Pool({
   user: process.env.PSQL_USER,
@@ -13,19 +16,6 @@ const pool = new Pool({
   },
 })
 
-// await pool.connect((err, client, release) => {
-//   if (err) {
-//     return console.error('Error acquiring client', err.stack);
-//   }
-//   client.query('SELECT NOW()', (err, result) => {
-//     release();
-//     if (err) {
-//       return console.error('Error executing query', err.stack);
-//     }
-//     console.log('Connected to Postgres!!:', result.rows);
-//     process.exit(0);
-//   });
-// });
 
 psqlListRouter.get('/', (req, res) => {
   pool.query('SELECT * FROM sessions')
@@ -46,4 +36,4 @@ psqlListRouter.post('/', (req, res) => {
     })
 })
 
-module.exports = psqlListRouter
+export default psqlListRouter

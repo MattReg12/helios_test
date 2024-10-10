@@ -1,7 +1,7 @@
-const Redis = require('ioredis');
-const redisRouter = require('express').Router()
-require('dotenv').config()
-const { split_into_chunks, process_chunks, process_summaries } = require('./open_ai');
+import Redis from 'ioredis';
+import express from 'express'
+const redisRouter = express.Router()
+import { split_into_chunks, process_chunks, process_summaries } from './open_ai.js' //rewrite this line
 
 let redis;
 
@@ -77,5 +77,6 @@ redisRouter.get('/:id', async (req, res) => {
   }
 })
 
-module.exports = { fetchRecording, addRecordingData }
+export default { fetchRecording, addRecordingData }
+// module.exports = { fetchRecording, addRecordingData }
 // module.exports = redisRouter
