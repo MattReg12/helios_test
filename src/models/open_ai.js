@@ -1,61 +1,95 @@
 import OpenAI from 'openai';
-const MaxTokens = 3000
-const CharsPerToken = 4
-const CharsPerMaxTokenCount = CharsPerToken * MaxTokens
+import AIParent from './ai_parent.js';
+import * as AIConfig from '../utils/ai_models_config.js'
 
-const configuration = {
-  apiKey: process.env.OPENAI_API_KEY,
-};
 
-const openai = new OpenAI(configuration)
+// const configuration = {
+//   apiKey: process.env.OPENAI_API_KEY,
+// };
 
-export const split_into_chunks = function(data, MaxTokens) {
-  chunks = []
-  startIndex = 0
-  while (startIndex < data.length) {
-    chunks.push(data.slice(startIndex, startIndex + CharsPerMaxTokenCount))
-    startIndex += CharsPerMaxTokenCount
-  }
-  return chunks
-}
+// const openai = new OpenAI(configuration)
 
-const chunk_to_promise = async function(chunk) {
-  try {
-    const response = await openai.chat.completions.create({
-      model: "gpt-4o-mini",
-      messages: [
-        { role: "system", content: "You are a helpful assistant." },
-        {
-            role: "user",
-            content: `Summarize the following rrweb events:\n ${chunk} in one short paragraph.`,
-        }]
+class OpenAIInterface extends AIParent {
+  constructor() {
+    super()
+    this.connection = new OpenAI({
+      apiKey: process.env.OPENAI_API_KEY
     })
+    this.model = AIConfig.OpenAIModel
+    this.maxTokens = AIConfig.OpenAIMaxTokens
+    this.maxPromptLength = AIConfig.OpenAIMaxPromptLength
+  }
 
-    return response.choices[0].message.content
-  } catch (e) {
-    console.error(e)
-    return ''
+  async query(prompt, data) {
+    try {
+      const response = await this.connection.chat.completions.create({
+        model: this.model,
+        messages: [
+          {
+              role: "user",
+              content: `${prompt} ${data}`,
+          }]
+      })
+      
+      return response.choices[0].message.content
+    } catch (e) {
+      console.error(e)
+      return ''
+    }
   }
 }
 
-export const process_chunks = async function(chunks) {
-  const promises = chunks.map(chunk_to_promise)
-  const summaries = await Promise.allSettled(promises)
+export default OpenAIInterface
+
+// export const split_into_chunks = function(data, llm) {
+//   const chunks = []
+//   let startIndex = 0
+//   const maxPromptLength = llm.maxPromptLength
   
-  return summaries.map(summary => summary.value);
-}
+//   while (startIndex < data.length) {
+//     chunks.push(data.slice(startIndex, startIndex + maxPromptLength))
+//     startIndex += maxPromptLength
+//   }
 
-export const process_summaries = async function(summaries) {
-  console.log('processing summary')
-  const completion = await openai.chat.completions.create({
-      model: "gpt-4o-mini",
-      messages: [
-        { role: "system", content: "You are a helpful assistant." },
-        {
-            role: "user",
-            content: `Summarize the following rrweb summaries into one main summary:\n ${summaries}`,
-        }]
-    })
+//   return chunks
+// }
 
-  return completion.choices[0].message.content
-}
+// export const query_chunks = async function(chunks) {
+//   const promises = chunks.map(chunk_to_promise)
+//   const summaries = await Promise.allSettled(promises)
+  
+//   return summaries.map(summary => summary.value);
+// }
+
+
+// const chunk_to_promise = async function(chunk) {
+//   try {
+//     const response = await openai.chat.completions.create({
+//       model: this.model,
+//       messages: [
+//         {
+//             role: "user",
+//             content: `Summarize the following rrweb events:\n ${chunk} in one short paragraph.`,
+//         }]
+//     })
+    
+//     return response.choices[0].message.content
+//   } catch (e) {
+//     console.error(e)
+//     return ''
+//   }
+// }
+
+// export const process_summaries = async function(summaries) {
+//   console.log('processing summary')
+//   const completion = await openai.chat.completions.create({
+//       model: "gpt-4o-mini",
+//       messages: [
+//         {
+//             role: "user",
+//             content: `Summarize the following rrweb summaries into one main summary:\n ${summaries}`,
+//         }]
+//     })
+
+//   return completion.choices[0].message.content
+// }

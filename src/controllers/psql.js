@@ -25,7 +25,7 @@ class PSQL {
       console.error(`Error fetching session ${id} from PSQL`, error.message)
     }
   }
-
+  // To be changed for actual data
   async addSession(id, data) {
     try {
       const data = await connection.query('INSERT INTO sessions (session_id, recording_data) VALUES ($1, $2) RETURNING *', 
