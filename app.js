@@ -1,10 +1,8 @@
-import dotenv from 'dotenv'
-dotenv.config()
 import express from 'express';
 import cors from 'cors'
 const app = express();
 import bodyParser from 'body-parser';
-import psqlListRouter from './controllers/psql.js';
+import psqlListRouter from './routes/test_routes.js';
 import indexRouter from './routes/index.js';
 
 
