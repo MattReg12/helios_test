@@ -2,8 +2,8 @@ import express from 'express';
 import cors from 'cors'
 const app = express();
 import bodyParser from 'body-parser';
-import { psqlListRouter, redisRouter, s3Router }  from './routes/test_routes.js';
-import indexRouter from './routes/index.js';
+import { psqlListRouter, redisRouter, s3Router }  from './src/routes/test_routes.js';
+import indexRouter from './src/routes/index.js';
 
 
 app.use(bodyParser.urlencoded({ extended: true })) 
