@@ -5,7 +5,7 @@ dotenv.config() // i dont really know why we need this here
 
 class PSQL {
   constructor() {
-    this.pool = new Pool({
+    this.connection = new Pool({
       user: process.env.PSQL_USER,
       host: process.env.PSQL_HOST,
       database: process.env.PSQL_NAME,
@@ -20,7 +20,7 @@ class PSQL {
   async getSession(id) {
     try {
       console.log('in psql class', typeof id)
-      const data = await this.pool.query('SELECT * FROM sessions WHERE session_id = ($1)', [id])
+      const data = await this.connection.query('SELECT * FROM sessions WHERE session_id = ($1)', [id])
       return data.rows
     } catch(e) {
       console.error(`Error fetching session ${id} from PSQL`, e.message)
@@ -29,7 +29,7 @@ class PSQL {
 
   async addSession(id, data) {
     try {
-      const data = await pool.query('INSERT INTO sessions (session_id, recording_data) VALUES ($1, $2) RETURNING *', 
+      const data = await connection.query('INSERT INTO sessions (session_id, recording_data) VALUES ($1, $2) RETURNING *', 
         [Math.floor(Math.random()* 1000), JSON.stringify({ example: 'data'})])
       return data
     } catch(e) {

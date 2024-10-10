@@ -2,7 +2,7 @@ import AWS from 'aws-sdk'
 
 class S3 {
   constructor() {
-    this.aws = new AWS.S3({
+    this.connection = new AWS.S3({
       accessKeyId: process.env.S3_ACCESS_KEY,
       secretAccessKey: process.env.S3_SECRET_ACCESS_KEY,
       region: process.env.S3_REGION
@@ -19,7 +19,7 @@ class S3 {
     };
 
     try {
-      const data = await this.aws.upload(params).promise();
+      const data = await this.connection.upload(params).promise();
       console.log(`File uploaded successfully to S3 at ${data.Location}`);
       return data.Location;
     } catch (error) {
@@ -34,7 +34,7 @@ class S3 {
     };
   
     try {
-      const data = await this.aws.getObject(params).promise();
+      const data = await this.connection.getObject(params).promise();
       console.log('File downloaded to S3 successfully:', data.Body.toString());
       return data.Body;
     } catch (error) {
