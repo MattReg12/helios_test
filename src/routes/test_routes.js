@@ -1,10 +1,10 @@
+// This is ALL for testing purposes
+
 import express from 'express'
 import PSQL from '../controllers/psql.js'
 import S3 from '../controllers/s3.js'
 import RedisDB from '../controllers/redis_db.js'
 import OpenAIInterface from '../models/open_ai.js'
-
-
 
 export const redisRouter = express.Router()
 export const psqlListRouter = express.Router()
@@ -18,7 +18,6 @@ const openAI = new OpenAIInterface()
 // PSQL
 psqlListRouter.get('/:id', async (req, res) => {
   const id = req.params.id
-  console.log(id)
   const data = await psql.getSession(id)
   res.send(data)
 })

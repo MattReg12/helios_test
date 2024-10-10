@@ -1,5 +1,6 @@
 import Redis from 'ioredis'
 
+// This provides functionaliyu to interact with the redis pub/sub mechanism. 
 class RedisPubSub {
   constructor() {
     this.redis = new Redis(process.env.REDIS_URL)
@@ -13,7 +14,7 @@ class RedisPubSub {
       }
     })
   }
-
+  // Send a message to a specific channel. 
   async produce(channel, message) {
     await this.redis.publish(channel, message)
   }

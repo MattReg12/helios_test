@@ -1,8 +1,10 @@
-import pg from 'pg'
+import pg from 'pg' // NPM package providing psql capabilities. 
 const Pool = pg.Pool
 import dotenv from 'dotenv'  // i dont really know why we need this here
 dotenv.config() // i dont really know why we need this here
 
+
+// Provides functionality to interact with the PSQL database. 
 class PSQL {
   constructor() {
     this.connection = new Pool({
@@ -16,7 +18,7 @@ class PSQL {
       },
     })
   }
-
+  // Get session metadata
   async getSession(id) {
     try {
       const data = await this.connection.query('SELECT * FROM sessions WHERE session_id = ($1)', [id])
@@ -25,11 +27,11 @@ class PSQL {
       console.error(`Error fetching session ${id} from PSQL`, error.message)
     }
   }
-  // To be changed for actual data
+  // To be changed for actual data, but this is the code to insert data into psql. 
   async addSession(id, data) {
     try {
       const data = await connection.query('INSERT INTO sessions (session_id, recording_data) VALUES ($1, $2) RETURNING *', 
-        [Math.floor(Math.random()* 1000), JSON.stringify({ example: 'data'})])
+        [Math.floor(Math.random() * 1000), JSON.stringify({ example: 'data'})])
       return data
     } catch(error) {
       console.error(`Error adding session ${id} to PSQL`, error.message)

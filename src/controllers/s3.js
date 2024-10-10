@@ -1,5 +1,6 @@
 import AWS from 'aws-sdk'
 
+// Provides functionality to interact with the redis database. 
 class S3 {
   constructor() {
     this.connection = new AWS.S3({
@@ -9,7 +10,7 @@ class S3 {
     })
     this.bucketName = process.env.S3_BUCKET_NAME
   }
-
+  // Add a file to S3
   async addFile(fileName, fileContent) {
     const params = {
       Bucket: this.bucketName,
@@ -26,7 +27,7 @@ class S3 {
       console.error('Error uploading file to S3:', error.message);
     }
   }
-
+  // grab a file to S3
   async getFile(fileName) {
     const params = {
       Bucket: this.bucketName,
